@@ -56,7 +56,13 @@
       line-height: 1.6;
       display: flex;
       min-height: 100vh;
+      overflow-x: hidden;
+
+
     }
+html {
+  scroll-behavior: smooth;
+}
 
     /* Sidebar Navigation */
     .sidebar {
@@ -150,6 +156,8 @@
       flex: 1;
       padding: 30px;
       transition: 0.3s;
+      width: 100%;
+     max-width: 100%;
     }
 
     /* Alert Banner */
@@ -262,18 +270,12 @@
 .hero {
   background: linear-gradient(rgba(245, 243, 243, 0.4), rgba(191, 21, 233, 0.6)),
               url("home.png") center/cover no-repeat;
-  background-size: cover;   
-  background-position: center;
-  background-repeat: no-repeat;
-}
-
-.hero {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
   min-height: 80vh;
+  width: 100%;
   padding: 30px;
 }
 
@@ -528,13 +530,36 @@ body.voice-speaking {
     /* Mobile Responsiveness */
     @media (max-width: 768px) {
       .sidebar {
-        width: 100%;
-        height: auto;
-        position: relative;
-      }
+  transform: translateX(-100%);
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 250px;
+  height: 100%;
+  background: #111827;
+  z-index: 100;
+  transition: transform 0.3s ease;
+}
+.sidebar {
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+.sidebar.open {
+  animation: slideInLeft 0.3s ease;
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.sidebar.open {
+  transform: translateX(0);
+}
+
       
       .main-content {
         margin-left: 0;
+        padding: 15px;
       }
       
       .pricing-options {
@@ -571,8 +596,8 @@ body.voice-speaking {
 }
 .gallery-grid img,
 .gallery-grid video {
-  width: 100%;
-  height: auto;
+   max-height: 300px;
+   width: 100%;
   object-fit: cover;
   border-radius: 8px;
   box-shadow: var(--shadow);
@@ -592,12 +617,59 @@ body.voice-speaking {
   color: white;
   max-width: 700px;
 }
+.mobile-menu-btn {
+  display: none;
+  position: fixed;
+  top: 20px;
+  left: 20px;
+  z-index: 101;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1.5rem;
+  padding: 10px 15px;
+  box-shadow: var(--shadow);
+  cursor: pointer;
+}
+
+/* Only show on small screens */
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: block;
+  }
+
+  .sidebar {
+    transform: translateX(-100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 250px;
+    height: 100%;
+    background: #111827;
+    z-index: 100;
+    transition: transform 0.3s ease;
+  }
+
+  .sidebar.open {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+    padding-top: 80px;
+  }
+}
 
 
     }
   </style>
 </head>
 <body>
+  <button id="menuToggle" class="mobile-menu-btn">
+  <i class="fas fa-bars"></i>
+</button>
+
   <!-- Sidebar Navigation -->
   <div class="sidebar">
     <div class="sidebar-header">
@@ -1047,6 +1119,11 @@ backToTopBtn.addEventListener('click', () => {
     behavior: "smooth"
   });
 });
+// Toggle sidebar open/close on mobile
+document.getElementById('menuToggle').addEventListener('click', function () {
+  document.querySelector('.sidebar').classList.toggle('open');
+});
+
 
 </script>
 <script>
